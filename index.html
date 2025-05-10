@@ -3,26 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="/">
     <title>Análise de Clientes</title>
     <style>
-        /* Estilos mantidos iguais */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; background-color: #f8f9fa; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        h1 { color: #2c3e50; text-align: center; margin-bottom: 30px; font-size: 2.5em; }
-        .botoes { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px; }
-        button { padding: 12px 20px; background-color: #3498db; color: white; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-size: 1em; }
-        button:hover { background-color: #2980b9; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .imagem-container { text-align: center; margin: 30px 0; min-height: 400px; }
-        .imagem-container img { max-width: 90%; height: auto; border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .tabela-container { margin-top: 30px; overflow-x: auto; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); padding: 20px; }
-        table { width: 100%; border-collapse: collapse; white-space: nowrap; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #ececec; font-size: 0.95em; }
-        th { background-color: #3498db; color: white; font-weight: 600; text-transform: uppercase; font-size: 0.9em; }
-        tr:hover { background-color: #f8f9fa; }
-        .status { text-align: center; padding: 20px; color: #666; font-style: italic; }
-        .erro { color: #dc3545; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px; padding: 15px; margin: 20px 0; }
-        .erro ul { margin: 10px 0 0 20px; }
-        @media (max-width: 768px) { .botoes { grid-template-columns: 1fr; } button { width: 100%; } }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .botoes {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .imagem-container {
+            text-align: center;
+            margin: 30px 0;
+            min-height: 400px;
+        }
+
+        .imagem-container img {
+            max-width: 90%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .tabela-container {
+            margin-top: 30px;
+            overflow-x: auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ececec;
+            font-size: 0.95em;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .status {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .erro {
+            color: #dc3545;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .erro ul {
+            margin: 10px 0 0 20px;
+        }
+
+        @media (max-width: 768px) {
+            .botoes {
+                grid-template-columns: 1fr;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -47,60 +148,49 @@
     </div>
 
     <script>
-        // Função para normalizar cabeçalhos
-        function normalizarHeader(header) {
-            return header
-                .trim()
-                .toLowerCase()
-                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-                .replace(/[^a-z0-9_]/g, '_');
-        }
-
+        // Configuração de caminhos absolutos
+        const BASE_URL = window.location.origin;
+        
         async function carregarCSV() {
             const container = document.getElementById('tabelaContainer');
             try {
                 container.innerHTML = '<div class="status">Carregando dados...</div>';
                 
-                // Forçar atualização do cache
-                const url = `aula05-dados_clientes.csv?t=${Date.now()}`;
-                const response = await fetch(url);
+                // URL absoluta com cache busting
+                const csvUrl = `${BASE_URL}/aula05-dados_clientes.csv?t=${Date.now()}`;
+                const response = await fetch(csvUrl);
                 
-                if (!response.ok) throw new Error(`Erro HTTP ${response.status}`);
-                
-                // Decodificar com tratamento de BOM
+                if (!response.ok) {
+                    throw new Error(`Erro ${response.status}: ${response.statusText}`);
+                }
+
+                // Decodificação segura
                 const buffer = await response.arrayBuffer();
                 const decoder = new TextDecoder('utf-8');
-                let csvData = decoder.decode(buffer).replace(/^\uFEFF/, '');
+                const csvData = decoder.decode(buffer).replace(/^\uFEFF/, '');
 
-                // Processar linhas
+                // Processamento do CSV
                 const linhas = csvData.split(/\r?\n/).filter(line => line.trim());
-                if (linhas.length < 2) throw new Error('CSV inválido ou vazio');
+                if (linhas.length < 2) throw new Error('CSV inválido');
 
-                // Processar cabeçalhos
-                const headersRaw = linhas[0].split(',');
-                const headers = headersRaw.map(normalizarHeader);
-                
-                // Cabeçalhos esperados
+                const headers = linhas[0].split(',').map(h => h.trim());
                 const expectedHeaders = [
                     'cliente_id', 'idade', 'renda_anual', 'frequencia_compras',
                     'valor_medio_compra', 'preferencia_frete_gratis',
                     'satisfacao_qualidade', 'total_gasto'
-                ].map(normalizarHeader);
+                ];
 
-                // Validação robusta
                 if (!arraysIguais(headers, expectedHeaders)) {
-                    console.error('Cabeçalhos recebidos:', headers);
-                    console.error('Cabeçalhos esperados:', expectedHeaders);
-                    throw new Error(`Divergência nos cabeçalhos. Verifique o CSV.`);
+                    throw new Error('Cabeçalhos do CSV não correspondem');
                 }
 
-                // Construir tabela
+                // Construção da tabela
                 const table = document.createElement('table');
                 
                 // Cabeçalho
                 const thead = table.createTHead();
                 const headerRow = thead.insertRow();
-                headersRaw.forEach(header => {
+                headers.forEach(header => {
                     const th = document.createElement('th');
                     th.textContent = header;
                     headerRow.appendChild(th);
@@ -126,19 +216,15 @@
                 console.error('Erro:', error);
                 container.innerHTML = `
                     <div class="erro">
-                        <strong>Erro crítico:</strong> ${error.message}
+                        <strong>Erro ao carregar dados:</strong> ${error.message}
                         <br><br>
-                        <details>
-                            <summary>Detalhes técnicos</summary>
-                            <pre>${error.stack || 'Nenhum detalhe adicional'}</pre>
-                        </details>
+                        <button onclick="location.reload()">↻ Tentar novamente</button>
                     </div>
                 `;
             }
         }
 
         function formatarCelula(valor, cabecalho) {
-            cabecalho = normalizarHeader(cabecalho);
             try {
                 const formatadores = {
                     'cliente_id': v => `#${v.padStart(4, '0')}`,
@@ -152,7 +238,7 @@
                 };
                 return formatadores[cabecalho]?.(valor) || valor;
             } catch (error) {
-                return `<span style="color:red">${valor} (erro)</span>`;
+                return `<span style="color:red">${valor}</span>`;
             }
         }
 
@@ -163,7 +249,7 @@
         function carregarImagem(tipo) {
             const container = document.getElementById('imagemContainer');
             container.innerHTML = `
-                <img src="${tipo}.png" alt="${tipo}" loading="lazy">
+                <img src="${BASE_URL}/${tipo}.png" alt="${tipo}" loading="lazy">
                 <div class="status">Visualização: ${tipo.toUpperCase()}</div>
             `;
         }
