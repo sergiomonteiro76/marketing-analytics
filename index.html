@@ -246,13 +246,17 @@
             return a.length === b.length && a.every((v, i) => v === b[i]);
         }
 
-        function carregarImagem(tipo) {
-            const container = document.getElementById('imagemContainer');
-            container.innerHTML = `
-                <img src="${BASE_URL}/${tipo}.png" alt="${tipo}" loading="lazy">
-                <div class="status">Visualização: ${tipo.toUpperCase()}</div>
-            `;
-        }
+		function carregarImagem(tipo) {
+			const container = document.getElementById('imagemContainer');
+			const imgUrl = `${tipo}.png?t=${Date.now()}`; // Cache busting
+			
+			container.innerHTML = `
+				<div class="status">Carregando imagem...</div>
+				<img src="${imgUrl}" alt="${tipo}" 
+					 onload="this.previousElementSibling.remove()" 
+					 onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\'erro\'>Erro ao carregar imagem</div>'">
+			`;
+		}		
     </script>
 </body>
 </html>
