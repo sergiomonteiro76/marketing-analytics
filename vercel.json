@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "index.html",
+      "src": "/*",
       "use": "@vercel/static"
     }
   ],
@@ -10,7 +10,7 @@
     {
       "src": "/aula05-dados_clientes.csv",
       "headers": {
-        "Content-Type": "text/csv; charset=utf-8"
+        "Content-Type": "text/csv"
       }
     },
     {
