@@ -1,21 +1,14 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "/*",
-      "use": "@vercel/static"
-    }
-  ],
+  "builds": [{"src": "/*", "use": "@vercel/static"}],
   "routes": [
     {
-      "src": "/aula05-dados_clientes.csv",
+      "src": "/(.*\\.(csv|png))",
       "headers": {
-        "Content-Type": "text/csv"
+        "Content-Type": "text/csv; charset=utf-8",
+        "Cache-Control": "no-cache"
       }
     },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
+    {"src": "/.*", "dest": "/index.html"}
   ]
 }
